@@ -21,7 +21,7 @@ private:
   int playerChoice;
   Player player1;
   Player player2;
-  Environment gameBoard;
+  Environment* gameBoard;
 };
 
 

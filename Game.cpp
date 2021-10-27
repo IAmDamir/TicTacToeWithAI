@@ -27,8 +27,10 @@ void Game::StartGame() {
 }
 
 void Game::PlayGame() {
+  gameBoard = new Environment();
   bool gameOver = false;
   pair<int, int> spaceChoice;
+
   cout << "Please choose who you will be playing against" << endl;
   cout << "1. Player" << endl;
   cout << "2. AI" << endl;
@@ -48,27 +50,44 @@ void Game::PlayGame() {
   }
 
   while (!gameOver) {
+    gameBoard->showTheBoard();
     spaceChoice = player1.ChooseASpace();
-    if (!gameBoard.markTheSpace('X', spaceChoice.first, spaceChoice.second)) {
+    while(!gameBoard->markTheSpace('X', spaceChoice.first, spaceChoice.second)) {
+      gameBoard->showTheBoard();
+      spaceChoice = player1.ChooseASpace();
+    }
+
+    if (gameBoard->isWin(spaceChoice.first, spaceChoice.second)) {
+      cout << "X wins" << endl;
+      gameOver = true;
+      continue;
+    }
+    if (gameBoard->isTie()) {
+      cout << "Tie!" << endl;
+      gameOver = true;
       continue;
     }
 
-    gameOver = gameBoard.isWin(spaceChoice.first, spaceChoice.second) || gameBoard.isTie();
-    if(gameOver) {
-      continue;
-    }
-    gameBoard.showTheBoard();
-
+    gameBoard->showTheBoard();
     spaceChoice = player2.ChooseASpace();
-    if (!gameBoard.markTheSpace('O', spaceChoice.first, spaceChoice.second)) {
-      continue;
+    while(!gameBoard->markTheSpace('O', spaceChoice.first, spaceChoice.second)) {
+      gameBoard->showTheBoard();
+      spaceChoice = player2.ChooseASpace();
     }
-    gameBoard.showTheBoard();
 
-    gameOver = gameBoard.isWin(spaceChoice.first, spaceChoice.second) || gameBoard.isTie();
+    if (gameBoard->isWin(spaceChoice.first, spaceChoice.second)) {
+      cout << "O wins" << endl;
+      gameOver = true;
+    }
+    if (gameBoard->isTie()) {
+      cout << "Tie!" << endl;
+      gameOver = true;
+    }
   }
 
-  gameBoard.showTheBoard();
+  delete gameBoard;
 }
 
-Game::~Game() = default;
+Game::~Game() {
+  delete gameBoard;
+}

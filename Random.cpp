@@ -7,7 +7,7 @@
 Random::Random() {
   // sets a seed for a random number generator
   // seed is equal to current time
-  srand(time(nullptr));
+  srand(time(0));
 }
 
 Random::~Random() = default;
